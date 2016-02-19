@@ -1,0 +1,17 @@
+---
+layout: default
+title: 英文中parameter和argument的区别
+shortTitle: parameter和argument的区别
+documentationExpanded: false
+comments: true
+postsExpanded: true
+excerpt: excerpt
+root: ../../../
+---
+
+下面是英文解释：
+
+* While defining method, variables passed in the method are called parameters.
+* While using those methods, values passed to those variables are called arguments.
+
+因此，parameter对应的__形参__，在定义方法时使用；argument对应的是__实参__，在调用方法时使用。

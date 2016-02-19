@@ -1,0 +1,71 @@
+---
+layout: default
+title: 从历史角度看终端（Terminal）和控制台（Console）的区别
+shortTitle: 终端和控制台的区别
+documentationExpanded: false
+comments: true
+postsExpanded: true
+excerpt: excerpt
+root: ../../../
+---
+
+== 电传打字（电报）机（TeleTYpewriter，TTY）
+
+在电传打字机之前，人类通过电报机实现远距离信息传输和接收。而电报机需要操作员经过培训掌握摩尔斯电码，学习成本高。而电传打字机是基于ASCII编码的，从而操作员不需要学习摩尔斯电码。电传打字机（Teletypewritter或Teletype，简称TTY），使用键盘作为输入设备，录入需要传输的信息，并将接收到的信息通过打印机打印出来。世界上的所有电传打字机曾一度被连接在一起，组成了一个大型的网络，名叫电传（Telex），被广泛的用于传输商业电报，但是那个时候的电传打字机是不与任何计算机相连的。<<1>>
+
+image::{{ site.url }}/assets/images/diff_console_terminal/WACsOperateTeletype.jpg[title="二战期间使用的电传打字机"]
+
+上图展现的是二战期间使用的电传打字机，可以在两个互联的设备上实现实时的信息传输。
+
+== 终端（Terminal）
+
+计算机在最开始就使用电传打字机作为输入输出设备。虽然在大多数时候，打孔卡阅读器和快速打印机取代了电传打字机，但是电传打字机依然作为交互式、分时共享的终端被保留下来，直到上世纪70年代末期视频显示器被广泛使用。
+
+image::{{ site.url }}/assets/images/diff_console_terminal/ASR-33_at_CHM.agr.jpg[title="Teletype公司的Model 33 ASR电传打字机"]
+
+图中是Teletype公司的Model 33 ASR电传打字机，可被用作计算机的终端。
+
+虽然当时的计算机是个庞然大物，并且还处于很原始、简单的发展阶段，但是却已经可以支持多任务处理。多任务功能已经足以使计算机可以实时地同多人交互作业。当时，一个机构可能只有一台主机，而机构的多名职员使用电传打印机通过电缆连接到主机，完成输入；而程序的输出则是通过打印到纸带上得以实现。
+
+image::{{ site.url }}/assets/images/diff_console_terminal/PaperTapes-5and8Hole.jpg[title="5孔和8孔的穿孔纸带"]
+
+上图分别是5孔和8孔的穿孔纸带，可以用作电传打字机的输入或输出，用来保存信息，且效率很高（在当时而言）。
+
+后来人们又在电传打印机的基础上进行了改进，将程序的输出显示在屏幕上。这样经过改进的设备被称之为**终端（Terminal）**。到了上个世纪70年代后期，出现了**视频终端（Video Terminals）**，如VT-100视频终端，它支持光标移动、彩色输出以及其他终端的高级特性，而这些特性完全可以用软件来配置决定。
+
+image::{{ site.url }}/assets/images/diff_console_terminal/DEC_VT100_terminal.jpg[title="DEC公司的VT100终端"]
+
+相比发展比较成熟的电传打字机，开始的终端设备的输入输出效率还比较低。
+
+然而市面充斥着各种各样的终端设备，他们或多或少有些不同之处，所以急切的需要一个软件兼容层（software compatibility layer）来处理这些电传打字机的不同细节特性。在UNIX系统中，解决的办法是让操作系统内核来处理这些底层的细节，比如字长（word length）、波特率（baud rate）、流控制（flow control）、奇偶校验（parity），以及一些基本行编辑（line editing）的控制码（control codes）。<<2>>
+
+image::{{ site.url }}/assets/images/diff_console_terminal/case1.png[title="内核中的UART驱动、线路规程（line discipline）和TTY驱动"]
+
+Unix系统在内核中加入了一个软件兼容层，包括**UART驱动**、**线路规程（line discipline）**和**TTY驱动**，兼容不同类型的终端
+
+终端通过**物理线路（Pysical line）**与计算机的**UART（通用异步收发传输器，Universal Asynchronous Receiver and Transmitter）端口**相连，用户键入的信息就是通过这样的物理线路传递给计算机。而内核UART驱动是专门处理这些数据信息的物理传输的，包括对这些数据进行奇偶校验和流控制。
+
+一台主机可以连接多个终端，早期的主机只支持串口线的终端，因此对应的设备叫做**串口终端（Serials Terminal）**。后来又发展出了**伪终端（ pseudo terminal，pty）**，以便于支持GUI，后来串口终端渐渐被图形界面的伪终端取代，也就是我们今天所说的终端。<<1>>
+
+== 控制台（Console）
+
+从上面可以看出，通过UART端口与主机相连的终端，只有在主机启动后才能实现人机交互。这样就存在一个问题：如果主机的操作系统内核在加载前或加载时出错，操作员将无法获知错误信息。为了能记录出主机开机过程的日志，也便于在主机出故障无法加载操作系统内核时进行检修维护，主机需要一个**控制台（Console）**。
+
+控制台是一个抽下的概念，任何具有文本录入和显示的设备都可以作为主机的控制台。在CRT显示设备出现之前，主机的控制台由**控制台打字机（Console Typewriter）**和**前端仪表盘（Front Panel）**组成。
+
+image::{{ site.url }}/assets/images/diff_console_terminal/DEC_VT100_terminal.jpg[title="IBM_1620的前端仪表盘"]
+
+上图是IBM_1620的前端仪表盘，可以显示并修改主机寄存器、内存的数据
+
+当CRT显示器出现之后，集显示和控制一体的终端成为了主机的系统控制台。早期，一台主机有且只能有一个控制台通过串口与主机相连，因此被又称为**串口控制台（Serial Console）**，如一个DEC VT100终端通过一个RS-232串口与主机相连。控制台可以显示主机的管理信息包括：BIOS或boot loader的输出信息、内核日志，比如开机关机的日志和记录，重要应用程序的日志。<<2>> 并且，从安全性的角度出发，控制台被安置在一个安全屋中，由具有特权级别的操作员使用，用来完成关机、选择启动介质。
+
+受到视频信号线长度的限制，键盘/视频多路器（我们所熟知的KVM交换机）应运而生，可以通过一个终端连接多个远距离的主机。近些年，KVM/IP设备的出现，运行计算机通过TCP/IP网络，甚至互联网访问远端的主机的视频输出并完成键盘录入。
+
+== 总结
+
+现如今，纠结终端和控制台区别的意义已经不大，物理的终端和控制台设备已经逐渐淡出我们的视线。Linux操作系统已经对其进行了重新的封装和定义。在Linux操作系统中，如果通过串口连接的设备，Linux将其标识为一个串口控制台（/dev/console或/dev/ttyS*)；在没有串口控制台连接的情况下，通过视频线（如VGA）、USB或KVM连接的设备，Linux将其标识为一个虚拟终端（/dev/tty*或/dev/console）；如果是通过Telnet、SSH等协议接入的，Linux将其标识为伪终端。
+
+[bibliography]
+== 参考文献
+[[[1]]] http://www.zhihu.com/question/20388511/answer/14984885[Terminal 和 Console 的区别是什么？]
+[[[2]]] http://blog.csdn.net/astrotycoon/article/details/39557367[TTY解密（The TTY demystified）]
