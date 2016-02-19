@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>楼下的烧烤摊</title>
+    <title>在Shell脚本中判断是否通过SSH连接运行脚本的方法</title>
 
 
     <meta name="description"
@@ -14,12 +14,12 @@
     <meta name="author" content="Your name goes here"/>
     <meta name="copyright" content="Maybe consider a Creative Commons license"/>
 
-    <link rel="stylesheet" href="css/foundation.css"/>
-    <link rel="stylesheet" href="css/font-awesome.css"/>
-    <link rel="stylesheet" href="css/coderay.css"/>
-    <link rel="stylesheet" href="css/asciidoctor.css"/>
-    <script src="js/vendor/modernizr.js"></script>
-    <script src="js/toc.js"></script>
+    <link rel="stylesheet" href="../../../css/foundation.css"/>
+    <link rel="stylesheet" href="../../../css/font-awesome.css"/>
+    <link rel="stylesheet" href="../../../css/coderay.css"/>
+    <link rel="stylesheet" href="../../../css/asciidoctor.css"/>
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
 </head>
 <body>
 
@@ -31,8 +31,8 @@
         <!-- Title Area -->
         <li class="name">
             <h1>
-                <a href="">
-                    楼下的烧烤摊
+                <a href="../../../">
+                    在Shell脚本中判断是否通过SSH连接运行脚本的方法
                 </a>
             </h1>
         </li>
@@ -49,20 +49,66 @@
     <!-- Main Blog Content -->
     <div class="large-9 columns" role="content">
 
-        <div class="literalblock">
+        <div class="paragraph">
+<p>希望在Shell脚本中显示中文，但是默认情况下终端上不支持中文显示，而通过SSH连接后可以支持中文显示。因此需要在运行Shell脚本时判断是否通过SSH连接。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>通过环境变量判断</p>
+<div class="listingblock">
 <div class="content">
-<pre>&lt;a href="./2016/01/20/Shell-running-with-SSH-login.html"&gt;脚本中判断接入方式的方法&lt;/a&gt;</pre>
+<pre class="CodeRay highlight"><code data-lang="bash">#!/bin/bash
+
+SH_CON=`env |grep &quot;SSH_CONNECTION&quot;`
+if [[ -z ${SSH_CON} ]]; then
+        echo &quot;tty&quot;
+else
+        echo &quot;pts&quot;
+fi</code></pre>
 </div>
 </div>
-<div class="literalblock">
+</li>
+<li>
+<p>通过连接终端类型判断</p>
+<div class="listingblock">
 <div class="content">
-<pre>&lt;a href="./2016/01/17/different-console-and-terminal.html"&gt;终端和控制台的区别&lt;/a&gt;</pre>
+<pre class="CodeRay highlight"><code data-lang="bash">#!/bin/bash
+
+PID=`echo $$`
+console_name=`ps |grep ${PID} |awk '{print $2}'`
+echo ${console_name:0:3}</code></pre>
 </div>
 </div>
-<div class="literalblock">
+<div class="paragraph">
+<p>如果结果为tty，说明在终端上运行的Shell脚本；如果为pts，说明通过SSH等方式连接。</p>
+</div>
+</li>
+<li>
+<p>通过命令直接判断</p>
+<div class="listingblock">
 <div class="content">
-<pre>&lt;a href="./2016/01/14/different-parameter-and-argument.html"&gt;parameter和argument的区别&lt;/a&gt;</pre>
+<pre class="CodeRay highlight"><code data-lang="bash">/sbin/consoletype</code></pre>
 </div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>如果是通过SSH连接获得的伪终端，结果是pty；如果是虚拟终端上则输出vt。命令的执行结果：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>0	虚拟终端（virtual terminal）</p>
+</li>
+<li>
+<p>1	串口控制台（serial console）</p>
+</li>
+<li>
+<p>2	伪终端（pseudo terminal）</p>
+</li>
+</ul>
 </div>
 
     </div>
@@ -112,13 +158,13 @@
     </div>
 </footer>
 
-<script src="js/vendor/jquery.js"></script>
-<script src="js/foundation.min.js"></script>
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
 <script>
     $(document).foundation();
 </script>
-<script src="js/vendor/jquery.js"></script>
-<script src="js/foundation/foundation.js"></script>
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation/foundation.js"></script>
 <script>
     $(document).foundation();
 
