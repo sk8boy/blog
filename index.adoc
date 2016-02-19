@@ -5,7 +5,3 @@ description: 今天你吃了楼下的烧烤吗？
 documentationExpanded: false
 postsExpanded: false
 ---
-
-{% for post in site.posts limit: 5 %}
-    <a href=".{{ post.url }}">{{ post.shortTitle }}</a>
-{% endfor %}
